@@ -1,6 +1,7 @@
 package de.thro.inf.prg3.a02;
 
 import javax.lang.model.element.Element;
+import java.util.Iterator;
 
 /**
  * @author Peter Kurfer
@@ -8,26 +9,28 @@ import javax.lang.model.element.Element;
  */
 public class SimpleListImpl implements SimpleList {
 
-    Element head = new Element();
+    Element head = new Element(1, null);
 
     public void add(Object item) {
-
+        Element neu = new Element(item, null);
+        Element monkey = new Element(1, null);
+        while (monkey.next != null) {
+            monkey = monkey.next;
+        }
+        monkey.next = neu;
     }
 
     public int size() {
-        return 1;
+        int counter = 0;
+        Element monkey = new Element(1, null);
+        while (monkey.next != null) {
+            counter++;
+        }
+        return counter;
     }
 
     public SimpleList filter(SimpleFilter filter) {
         return this;
-    }
-
-    public boolean hasNext() {
-        return true;
-    }
-
-    public Object next() {
-        return 1;
     }
 
     static class Element {
@@ -36,12 +39,20 @@ public class SimpleListImpl implements SimpleList {
 
         public Element(Object obj, Element elem) {
             this.item = obj;
+            this.next = elem;
         }
     }
 
-    interface Iterator {
-        public boolean hasNext();
+    public class SimpleIteratorImpl implements Iterator {
 
-        public Object next();
+        Element current;
+
+        public boolean hasNext() {
+            return current != null;
+        }
+
+        public Element next() {
+            return current.next;
+        }
     }
 }
